@@ -1,0 +1,128 @@
+<Policy PolicyId="DocumentAccessPolicy"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:permit-overrides"
+        xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+
+  <!-- Accesso completo per utenti admin sui documenti del proprio tenant -->
+  <Rule RuleId="AdminAccess" Effect="Permit">
+    <Target>
+      <AnyOf>
+        <AllOf>
+          <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
+            <AttributeDesignator AttributeId="user.role" 
+                               Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" 
+                               DataType="http://www.w3.org/2001/XMLSchema#string"/>
+          </Match>
+        </AllOf>
+      </AnyOf>
+    </Target>
+    <Condition>
+      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+        <AttributeDesignator AttributeId="user.tenant" 
+                           Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" 
+                           DataType="http://www.w3.org/2001/XMLSchema#string"/>
+        <AttributeDesignator AttributeId="document.tenant" 
+                           Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" 
+                           DataType="http://www.w3.org/2001/XMLSchema#string"/>
+      </Apply>
+    </Condition>
+  </Rule>
+
+  <!-- Accesso per i manager a documenti classificati come internal o public nel proprio tenant -->
+  <Rule RuleId="ManagerAccess" Effect="Permit">
+    <Target>
+      <AnyOf>
+        <AllOf>
+          <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">manager</AttributeValue>
+            <AttributeDesignator AttributeId="user.role" 
+                               Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" 
+                               DataType="http://www.w3.org/2001/XMLSchema#string"/>
+          </Match>
+        </AllOf>
+      </AnyOf>
+    </Target>
+    <Condition>
+      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+          <AttributeDesignator AttributeId="user.tenant" 
+                             Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" 
+                             DataType="http://www.w3.org/2001/XMLSchema#string"/>
+          <AttributeDesignator AttributeId="document.tenant" 
+                             Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" 
+                             DataType="http://www.w3.org/2001/XMLSchema#string"/>
+        </Apply>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:any-of">
+          <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+          <AttributeDesignator AttributeId="document.classification" 
+                             Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" 
+                             DataType="http://www.w3.org/2001/XMLSchema#string"/>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">internal</AttributeValue>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">public</AttributeValue>
+          </Apply>
+        </Apply>
+      </Apply>
+    </Condition>
+  </Rule>
+
+  <!-- Accesso per i dipendenti a documenti public nel proprio tenant -->
+  <Rule RuleId="EmployeeAccess" Effect="Permit">
+    <Target>
+      <AnyOf>
+        <AllOf>
+          <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">employee</AttributeValue>
+            <AttributeDesignator AttributeId="user.role" 
+                               Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" 
+                               DataType="http://www.w3.org/2001/XMLSchema#string"/>
+          </Match>
+        </AllOf>
+      </AnyOf>
+    </Target>
+    <Condition>
+      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+          <AttributeDesignator AttributeId="user.tenant" 
+                             Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" 
+                             DataType="http://www.w3.org/2001/XMLSchema#string"/>
+          <AttributeDesignator AttributeId="document.tenant" 
+                             Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" 
+                             DataType="http://www.w3.org/2001/XMLSchema#string"/>
+        </Apply>
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+          <AttributeDesignator AttributeId="document.classification" 
+                             Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" 
+                             DataType="http://www.w3.org/2001/XMLSchema#string"/>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">public</AttributeValue>
+        </Apply>
+      </Apply>
+    </Condition>
+  </Rule>
+
+  <!-- Accesso condiviso - Target generico, logica completa nella Condition -->
+  <Rule RuleId="SharedAccess" Effect="Permit">
+    <Target>
+      <!-- Target vuoto per applicarsi a qualsiasi richiesta -->
+    </Target>
+    <Condition>
+      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:any-of">
+        <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+        <AttributeDesignator AttributeId="user.tenant" 
+                           Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" 
+                           DataType="http://www.w3.org/2001/XMLSchema#string"/>
+        <AttributeDesignator AttributeId="document.shared_with" 
+                           Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" 
+                           DataType="http://www.w3.org/2001/XMLSchema#string"/>
+      </Apply>
+    </Condition>
+  </Rule>
+
+  <!-- Regola finale di negazione implicita -->
+  <Rule RuleId="DenyAllOthers" Effect="Deny">
+    <Target>
+      <!-- Target vuoto per applicarsi a qualsiasi richiesta non gia gestita -->
+    </Target>
+  </Rule>
+
+</Policy>

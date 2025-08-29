@@ -1,0 +1,23 @@
+<Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+  <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+    <Attribute AttributeId="user.role">
+      <AttributeValue>employee</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="user.tenant">
+      <AttributeValue>tenant-a</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+    <Attribute AttributeId="document.tenant">
+      <AttributeValue>tenant-a</AttributeValue>
+    </Attribute>
+    <Attribute AttributeId="document.classification">
+      <AttributeValue>public</AttributeValue>
+    </Attribute>
+  </Attributes>
+  <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+    <Attribute AttributeId="action-id">
+      <AttributeValue>read</AttributeValue>
+    </Attribute>
+  </Attributes>
+</Request>

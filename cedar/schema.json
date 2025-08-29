@@ -1,0 +1,27 @@
+{
+  "principalTypes": {
+    "User": {
+      "attributes": {
+        "role": { "type": "String" },
+        "tenant": { "type": "String" }
+      }
+    }
+  },
+  "resourceTypes": {
+    "Document": {
+      "attributes": {
+        "tenant": { "type": "String" },
+        "classification": { "type": "String" },
+        "shared_with": {
+          "type": {
+            "collection": "Set",
+            "element": "String"
+          }
+        }
+      }
+    }
+  },
+  "actions": {
+    "read": {}
+  }
+}

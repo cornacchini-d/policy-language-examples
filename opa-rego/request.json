@@ -1,0 +1,12 @@
+{
+  "action": "read",
+  "user": {
+    "role": "manager",
+    "tenant": "tenant-a"
+  },
+  "document": {
+    "tenant": "tenant-a",
+    "classification": "internal",
+    "shared_with": ["tenant-b", "tenant-c"]
+  }
+}
