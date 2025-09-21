@@ -1,9 +1,0 @@
-{
-  "principal": { "role": "employee", "tenant": "tenant-a" },
-  "action": "read",
-  "resource": {
-    "tenant": "tenant-a",
-    "classification": "public",
-    "shared_with": ["tenant-b"]
-  }
-}
