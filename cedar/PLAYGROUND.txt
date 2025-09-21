@@ -1,0 +1,36 @@
+Cedar Playgroud: Esempio di Authorization Request
+
+MyApp::User employee1
+
+MyApp::Action read
+
+MyApp::Document doc1
+
+Context: {}
+
+Entities:
+[
+    {
+        "uid": {
+            "type": "MyApp::User",
+            "id": "employee1"
+        },
+        "attrs": {
+            "role": "employee",
+            "tenant": "tenant-a"
+        },
+        "parents": []
+    },
+    {
+        "uid": {
+            "type": "MyApp::Document",
+            "id": "doc1"
+        },
+        "attrs": {
+            "tenant": "tenant-a",
+            "classification": "public",
+            "shared_with": ["tenant-b"]
+        },
+        "parents": []
+    }
+]
