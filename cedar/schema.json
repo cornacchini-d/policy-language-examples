@@ -1,27 +1,50 @@
 {
-  "principalTypes": {
-    "User": {
-      "attributes": {
-        "role": { "type": "String" },
-        "tenant": { "type": "String" }
-      }
-    }
-  },
-  "resourceTypes": {
-    "Document": {
-      "attributes": {
-        "tenant": { "type": "String" },
-        "classification": { "type": "String" },
-        "shared_with": {
-          "type": {
-            "collection": "Set",
-            "element": "String"
+  "MyApp": {
+    "entityTypes": {
+      "User": {
+        "shape": {
+          "type": "Record",
+          "attributes": {
+            "role": {
+              "type": "String"
+            },
+            "tenant": {
+              "type": "String"
+            }
+          }
+        }
+      },
+      "Document": {
+        "shape": {
+          "type": "Record",
+          "attributes": {
+            "tenant": {
+              "type": "String"
+            },
+            "classification": {
+              "type": "String"
+            },
+            "shared_with": {
+              "type": "Set",
+              "element": {
+                "type": "String"
+              }
+            }
           }
         }
       }
+    },
+    "actions": {
+      "read": {
+        "appliesTo": {
+          "principalTypes": [
+            "User"
+          ],
+          "resourceTypes": [
+            "Document"
+          ]
+        }
+      }
     }
-  },
-  "actions": {
-    "read": {}
   }
 }
