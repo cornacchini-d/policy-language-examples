@@ -1,0 +1,12 @@
+{
+  "action": "read",
+  "user": {
+    "role": "employee",
+    "tenant": "tenant-a"
+  },
+  "document": {
+    "tenant": "tenant-a",
+    "classification": "confidential",
+    "shared_with": []
+  }
+}
